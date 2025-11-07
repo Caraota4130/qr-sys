@@ -41,7 +41,7 @@
 
                         <div class="mb-3">
                             <strong>Contenido:</strong>
-                            <div class="mt-1 p-2 bg-light rounded">
+                            {{-- <div class="mt-1 p-2 bg-light rounded">
                                 @if($qrCode->type === 'url')
                                     <a href="{{ $qrCode->content }}" target="_blank" class="text-break">
                                         {{ $qrCode->content }}
@@ -57,7 +57,7 @@
                                 @else
                                     <pre class="mb-0"><code>{{ $qrCode->content }}</code></pre>
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="mb-3">
