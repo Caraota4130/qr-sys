@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\QrCode;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class QrCodeSeeder extends Seeder
 {
     public function run()
     {
-        $this->call([
-            QrCodeSeeder::class,
-        ]);
+        QrCode::factory()->count(15)->create();
     }
 }
