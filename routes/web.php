@@ -3,6 +3,10 @@
 use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [QrCodeController::class, 'index'])->name('index');
+Auth::routes();
 
-Route::resource('qr-codes', QrCodeController::class);
+Route::get('/', [QrCodeController::class, 'index'])->name('qr-codes.index');
+
+Route::get('/qr-codes/all', [QrCodeController::class, 'getAll'])->name('qr-codes.all');
+
+Route::resource('/qr-codes', QrCodeController::class);

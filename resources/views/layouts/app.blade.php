@@ -15,7 +15,7 @@
     <body>
         @include('layouts.includes.header')
 
-        <main class="m-5 p-2">
+        <main style="max-width: 100%;" class="m-5 p-2">
             @yield('content')
         </main>
 

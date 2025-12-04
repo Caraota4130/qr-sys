@@ -11,13 +11,13 @@ return new class extends Migration
         Schema::create('qr_codes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['url', 'text', 'email', 'contact']);
             $table->text('content');
             $table->string('color')->default('#000000');
             $table->string('background_color')->default('#FFFFFF');
             $table->integer('size')->default(200);
-            $table->integer('scan_count')->default(0);
-            $table->boolean('is_active')->default(true);
+            $table->integer('scans')->default(0);
+            $table->boolean('active')->default(true);
+            $table->foreignId('user_id')->constrained()->restrictOnDelete()->cascadeOnUpdate();
             $table->softDeletes();
             $table->timestamps();
         });
