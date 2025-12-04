@@ -1,2 +1,7 @@
 @import 'bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@import url('datatables.net-bs5');
+@import url('datatables.net-buttons-bs5');
+@import url('datatables.net-columncontrol-bs5');
+@import url('datatables.net-responsive-bs5');

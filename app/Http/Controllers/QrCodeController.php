@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 
 class QrCodeController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
-        $qrCodes = QrCode::latest()->get();
-        return view('qr-codes.index', compact('qrCodes'));
+        return view('qr-codes.index');
+    }
+
+    public function getAll() {
+        return QrCode::where('user_id', auth()->user()->id)->get();
     }
 
     public function create()
@@ -20,16 +27,19 @@ class QrCodeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:url,text,wifi,email,contact',
             'content' => 'required|string',
             'color' => 'required|string',
             'background_color' => 'required|string',
-            'size' => 'required|integer|min:100|max:500'
+            'size' => 'required|integer|min:100|max:500',
+            'active' => 'boolean'
         ]);
 
-        QrCode::create($request->all());
+        $validated['user_id'] = auth()->id();
+        $validated['active'] = $request->has('active'); // Checkbox handling
+
+        QrCode::create($validated);
 
         return redirect()->route('qr-codes.index')
             ->with('success', 'QR Code creado exitosamente!');
@@ -39,8 +49,7 @@ class QrCodeController extends Controller
     {
         $qrCode = QrCode::findOrFail($id);
         
-        // Incrementar contador de escaneos cuando se visualiza
-        $qrCode->incrementScanCount();
+        // $qrCode->incrementScanCount();
         
         return view('qr-codes.show', compact('qrCode'));
     }
@@ -54,32 +63,22 @@ class QrCodeController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'type' => 'required|in:url,text,email,wifi,vcard,sms,phone',
             'content' => 'required|string',
             'color' => 'nullable|string|size:7',
             'background_color' => 'nullable|string|size:7',
             'size' => 'nullable|integer|min:100|max:500',
-            'is_active' => 'boolean'
+            'active' => 'boolean'
         ]);
 
-        // Procesar el contenido según el tipo
-        $contentData = $validated['content'];
-        if (in_array($validated['type'], ['wifi', 'vcard', 'sms'])) {
-            try {
-                $contentData = json_decode($contentData, true, 512, JSON_THROW_ON_ERROR);
-            } catch (\JsonException $e) {
-                // Si no es JSON válido, mantener como string
-            }
-        }
+        $validated['active'] = $request->has('active'); // Checkbox handling
 
         $qrCode->update([
             'name' => $validated['name'],
-            'type' => $validated['type'],
-            'content' => $contentData,
+            'content' => $validated['content'],
             'color' => $validated['color'] ?? '#000000',
             'background_color' => $validated['background_color'] ?? '#FFFFFF',
             'size' => $validated['size'] ?? 200,
-            'is_active' => $validated['is_active'] ?? false
+            'active' => $validated['active']
         ]);
 
         return redirect()->route('qr-codes.index')

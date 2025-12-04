@@ -1,35 +1,60 @@
 <?php
 
+/**
+ * Created by Reliese Model.
+ */
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Str;
 
+/**
+ * Class QrCode
+ * 
+ * @property int $id
+ * @property string $name
+ * @property string $content
+ * @property string $color
+ * @property string $background_color
+ * @property int $size
+ * @property int $scans
+ * @property bool $active
+ * @property int $user_id
+ * @property string|null $deleted_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * 
+ * @property User $user
+ *
+ * @package App\Models
+ */
 class QrCode extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+	use SoftDeletes;
+	protected $table = 'qr_codes';
 
-    protected $fillable = [
-        'name',
-        'type',
-        'content',
-        'color',
-        'background_color',
-        'size',
-        'scan_count',
-        'is_active'
-    ];
+	protected $casts = [
+		'size' => 'int',
+		'scans' => 'int',
+		'active' => 'bool',
+		'user_id' => 'int'
+	];
 
-    protected $casts = [
-        'content' => 'array',
-        'is_active' => 'boolean'
-    ];
+	protected $fillable = [
+		'name',
+		'content',
+		'color',
+		'background_color',
+		'size',
+		'scans',
+		'active',
+		'user_id'
+	];
 
-    public function incrementScanCount()
-    {
-        $this->update(['scan_count' => $this->scan_count + 1]);
-    }
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 }
